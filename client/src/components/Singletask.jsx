@@ -20,9 +20,14 @@ function Singletask(props) {
     const editTask = () => {
         navigate('/edit-task', { state: props.data })
     }
-    const deleteTask = () => {
-        let response = axios.delete(`http://localhost:5000/api/tasks/${props.data.taskID}`)
+    const deleteTask = async () => {
+        let response = await axios.delete(`http://localhost:5000/api/tasks/${props.data.taskID}`)
         console.log(response)
+        window.location.reload()
+    }
+    const completed = async () => {
+        let updatedStatus = { status: "completed" };
+        await axios.patch(`http://localhost:5000/api/tasks/${props.data.taskID}`, updatedStatus)
         window.location.reload()
     }
     return (
@@ -32,7 +37,7 @@ function Singletask(props) {
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         {props.data.dueDate}
                     </Typography>
-                    <Button variant="contained" color="success">set Completed</Button>
+                    <Button variant="contained" color="success" onClick={completed}>mark as Completed</Button>
                 </Box>
                 <Typography variant="h5" component="div">
                     {props.data.taskName}

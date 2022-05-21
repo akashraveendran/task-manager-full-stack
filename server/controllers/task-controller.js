@@ -4,7 +4,7 @@ const tasks = {};
 
 const getAllTasks = async (req, res) => {
     //executing my sql query to fetch all the tasks from  db
-    connection.query("SELECT * FROM tasklist", (err, tasks) => {
+    connection.query("SELECT * FROM tasklist WHERE status='false'", (err, tasks) => {
         if (err) res.status(500).json({ msg: err })
         else if (tasks.length == 0) res.json({ msg: 'No tasks found.....' }); //if no tasks are found tasks will be empty array
         else res.status(200).json({ tasks });
@@ -12,8 +12,8 @@ const getAllTasks = async (req, res) => {
 }
 const createTask = async (req, res) => {
     // console.log(req.body)
-    const { taskName, description, dueDate, difficulty } = req.body; //destructuring data from req.body
-    connection.query("INSERT INTO tasklist SET ?", [{ taskName, description, dueDate, difficulty }], (err, task) => {
+    // const { taskName, description, dueDate, difficulty } = req.body; //destructuring data from req.body
+    connection.query("INSERT INTO tasklist SET ?", [req.body], (err, task) => {
         if (err) {
             console.log(err)
             res.status(500).json({ msg: err });
