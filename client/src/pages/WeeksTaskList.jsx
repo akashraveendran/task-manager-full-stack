@@ -7,9 +7,29 @@ import SideBar from '../components/SideBar'
 function WeeksTaskList() {
     const [taskList, setTaskList] = useState();
     const fetchAllTasks = async function () {
-        let { data } = await axios.get('http://localhost:5000/api/tasks') //destruscturing response from the axios request and getting data
-        // console.log(data.tasks);
-        setTaskList(data.tasks)
+        //destruscturing response from the axios request and getting data
+        let { data } = await axios.get('http://localhost:5000/api/tasks')
+        console.log(data.tasks);
+        const todayObj = new Date();
+        const todayDate = todayObj.getDate();
+        const todayDay = todayObj.getDay();
+
+        // get first date of week
+        const firstDayOfWeek = new Date(todayObj.setDate(todayDate - todayDay));
+
+        // get last date of week
+        const lastDayOfWeek = new Date(firstDayOfWeek);
+        lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 6);
+        console.log("dates ", firstDayOfWeek, lastDayOfWeek)
+
+        const weeksTasks = data.tasks.filter((single) => {
+            let taskDay = new Date(single.dueDate);
+            if (taskDay >= firstDayOfWeek && taskDay <= lastDayOfWeek) {
+                console.log(single)
+                return single;
+            }
+        })
+        setTaskList(weeksTasks)
     }
     useEffect(() => {
         fetchAllTasks()

@@ -8,7 +8,18 @@ function TodaysTaskList() {
     const fetchAllTasks = async function () {
         let { data } = await axios.get('http://localhost:5000/api/tasks') //destruscturing response from the axios request and getting data
         // console.log(data.tasks);
-        setTaskList(data.tasks)
+        const todaystasks = data.tasks.filter((single) => {
+            let today = new Date();
+            let taskDay = new Date(single.dueDate);
+            if (today.getDay() == taskDay.getDay()
+                &&
+                today.getMonth() == taskDay.getMonth()
+                &&
+                today.getFullYear() == taskDay.getFullYear()) {
+                return single;
+            }
+        })
+        setTaskList(todaystasks)
     }
     useEffect(() => {
         fetchAllTasks()
