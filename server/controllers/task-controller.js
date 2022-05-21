@@ -9,12 +9,11 @@ const getAllTasks = async (req, res) => {
         else if (tasks.length == 0) res.json({ msg: 'No tasks found.....' }); //if no tasks are found tasks will be empty array
         else res.status(200).json({ tasks });
     })
-
 }
 const createTask = async (req, res) => {
     // console.log(req.body)
-    const { taskName, description, dueDate, difficulty, status } = req.body; //destructuring data from req.body
-    connection.query("INSERT INTO tasklist SET ?", [{ taskName, description, dueDate, difficulty, status }], (err, task) => {
+    const { taskName, description, dueDate, difficulty } = req.body; //destructuring data from req.body
+    connection.query("INSERT INTO tasklist SET ?", [{ taskName, description, dueDate, difficulty }], (err, task) => {
         if (err) {
             console.log(err)
             res.status(500).json({ msg: err });

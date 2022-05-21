@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios';
 
 
 const CustomCard = styled(Card)`
@@ -13,29 +15,38 @@ const CustomCard = styled(Card)`
   margin:10px;
 `;
 
-function Singletask() {
+function Singletask(props) {
+    const navigate = useNavigate()
+    const editTask = () => {
+        navigate('/edit-task', { state: props.data })
+    }
+    const deleteTask = () => {
+        let response = axios.delete(`http://localhost:5000/api/tasks/${props.data.taskID}`)
+        console.log(response)
+        window.location.reload()
+    }
     return (
         <CustomCard sx={{ minWidth: 275 }}>
             <CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        Task due date
+                        {props.data.dueDate}
                     </Typography>
                     <Button variant="contained" color="success">set Completed</Button>
                 </Box>
                 <Typography variant="h5" component="div">
-                    Task Name
+                    {props.data.taskName}
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    difficulty
+                    {props.data.difficulty}
                 </Typography>
                 <Typography variant="body2">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Cumque, dolor. Atque veniam labore debitis ullam minus nesciunt sint. Neque, odit.
+                    {props.data.description}
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button variant='contained' size="small">Edit</Button>
-                <Button variant="contained" color='error' size="small">Delete</Button>
+                <Button variant='contained' size="small" onClick={editTask}>Edit</Button>
+                <Button variant="contained" color='error' size="small" onClick={deleteTask}>Delete</Button>
             </CardActions>
         </CustomCard>
     )

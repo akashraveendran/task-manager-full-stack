@@ -1,20 +1,31 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 import Singletask from '../components/Singletask'
-import './TodaysTaskList.css'
 import SideBar from '../components/SideBar'
 
 function TodaysTaskList() {
+    const [taskList, setTaskList] = useState();
+    const fetchAllTasks = async function () {
+        let { data } = await axios.get('http://localhost:5000/api/tasks') //destruscturing response from the axios request and getting data
+        // console.log(data.tasks);
+        setTaskList(data.tasks)
+    }
+    useEffect(() => {
+        fetchAllTasks()
+    }, [])
     return (
         <div >
             <SideBar today />
             <div className='tasks-container' style={{ display: 'flex', flexDirection: 'column', marginLeft: '20vw' }}>
                 <h2 style={{ textAlign: 'center', fontSize: 35, color: '#fff' }}>Todays Tasks</h2>
                 <div className="tasks" style={{ padding: '0 10vw' }}>
-
-                    <Singletask />
-                    <Singletask />
-                    <Singletask />
-                    <Singletask />
+                    {
+                        taskList &&
+                        taskList.map((singleTask) => {
+                            console.log(singleTask)
+                            return <Singletask data={singleTask} />
+                        })
+                    }
                 </div>
             </div>
         </div>
